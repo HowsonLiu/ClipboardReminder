@@ -40,19 +40,22 @@ private:
     QAction* m_enableAct;
     QAction* m_disableAct;
     QAction* m_showAct;
+    QAction* m_hideAct;
     QAction* m_exitAct;
 
     QClipboard* m_clipBoard;
     QTimer* m_timer;
 
-    bool b_draging;
+    bool b_draging = false;
+    bool b_showing = false;
     QPoint m_mousePoint;
 
     float m_showTime = 1;
-    int m_detailLabelMaxHeight = 200;
-    int m_detailLabelMaxWidth = 200;
+    int m_detailLabelMaxWidth = 192;
+    int m_detailLabelMaxHeight = 108;
 
 private:
+    void ReadConfigure();
     void StartHide();
     void StopHide();
 
@@ -60,6 +63,8 @@ private slots:
     void ClipboardUpdate();
     void Enable();
     void Disable();
+    void Show();
+    void Hide();
     void TrayIconSlot(QSystemTrayIcon::ActivationReason);
 
 };

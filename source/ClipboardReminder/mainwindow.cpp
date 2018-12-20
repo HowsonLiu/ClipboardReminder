@@ -4,6 +4,8 @@
 #include <QMimeData>
 #include <QSizePolicy>
 #include <QDebug>
+#include <QFileInfo>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,15 +20,22 @@ MainWindow::MainWindow(QWidget *parent) :
     m_enableAct = new QAction(this);
     m_disableAct = new QAction(this);
     m_showAct = new QAction(this);
+    m_hideAct = new QAction(this);
     m_exitAct = new QAction(this);
     m_clipBoard = QApplication::clipboard();
     m_timer = new QTimer(this);
     m_icon = new QIcon();
 
+    QFileInfo ini_file("./ClipboardReminder.ini");
+    if(ini_file.exists() == true){
+        ReadConfigure();
+    }
+
     m_trayIcon->setContextMenu(m_menu);
     m_menu->addAction(m_enableAct);
     m_menu->addAction(m_disableAct);
     m_menu->addAction(m_showAct);
+    m_menu->addAction(m_hideAct);
     m_menu->addAction(m_exitAct);
 
     this->setCentralWidget(m_centralWidget);
@@ -37,7 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(m_enableAct, &QAction::triggered, this, &MainWindow::Enable);
     connect(m_disableAct, &QAction::triggered, this, &MainWindow::Disable);
-    connect(m_showAct, &QAction::triggered, this, &MainWindow::ClipboardUpdate);
+    connect(m_showAct, &QAction::triggered, this, &MainWindow::Show);
+    connect(m_hideAct, &QAction::triggered, this, &MainWindow::Hide);
     connect(m_exitAct, &QAction::triggered, this, &MainWindow::close);
     connect(m_timer, &QTimer::timeout, this, &MainWindow::hide);
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::TrayIconSlot);
@@ -48,10 +58,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_enableAct->setText(QString::fromLocal8Bit("启动"));
     m_disableAct->setText(QString::fromLocal8Bit("禁止"));
     m_showAct->setText(QString::fromLocal8Bit("查看"));
+    m_hideAct->setText(QString::fromLocal8Bit("隐藏"));
     m_exitAct->setText(QString::fromLocal8Bit("退出"));
 
+    //m_detailLabel->setStyleSheet("QLabel {border: 2px solid #1296db;}");
     m_detailLabel->setMaximumSize(QSize(m_detailLabelMaxWidth, m_detailLabelMaxHeight));
-    m_detailLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    //m_detailLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);//总在最前、无边框、任务栏不显示(Qt::Tooltip)
 
@@ -60,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_trayIcon->show();
     Enable();
     ClipboardUpdate();
-    m_timer->start(1); //构造函数不能使用this->hide
+    //m_timer->start(1); //构造函数不能使用this->hide
     m_trayIcon->showMessage("ClipboardReminder", QString::fromLocal8Bit("已启用"), *m_icon, 1000);
 }
 
@@ -88,7 +100,22 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     b_draging = false;
-    StartHide();
+    if(!b_showing)
+        StartHide();
+}
+
+void MainWindow::ReadConfigure()
+{
+    QSettings ini_settings("./ClipboardReminder.ini", QSettings::IniFormat);
+    float ini_showTime = ini_settings.value("setting/showtime").toFloat();
+    int ini_width = ini_settings.value("setting/width").toInt();
+    int ini_height = ini_settings.value("setting/height").toInt();
+    if(ini_showTime > 0)
+        m_showTime = ini_showTime;
+    if(ini_width > 0)
+        m_detailLabelMaxWidth = ini_width;
+    if(ini_height > 0)
+        m_detailLabelMaxHeight = ini_height;
 }
 
 void MainWindow::StartHide()
@@ -111,14 +138,7 @@ void MainWindow::ClipboardUpdate()
     else if(data->hasImage()){
         m_infoLabel->setText(QString::fromLocal8Bit("图片"));
         QImage img = qvariant_cast<QImage>(data->imageData());
-        if(img.height() > m_detailLabelMaxHeight || img.width() > m_detailLabelMaxWidth){
-            if(m_detailLabelMaxHeight/img.height() > m_detailLabelMaxWidth/img.width()){
-                img = img.scaled(m_detailLabelMaxWidth, img.height()*m_detailLabelMaxWidth/img.width());
-            }
-            else{
-                img = img.scaled(img.width()*m_detailLabelMaxHeight/img.height(), m_detailLabelMaxHeight);
-            }
-        }
+        img = img.scaled(QSize(m_detailLabelMaxWidth, m_detailLabelMaxHeight),Qt::KeepAspectRatio);
         m_detailLabel->setPixmap(QPixmap::fromImage(img));
     }
     else if(data->hasColor()){
@@ -127,8 +147,6 @@ void MainWindow::ClipboardUpdate()
     }
     else if(data->hasHtml()){
         m_infoLabel->setText(QString::fromLocal8Bit("HTML"));
-
-
         m_detailLabel->setText(data->html());
     }
     else if(data->hasUrls()){
@@ -145,7 +163,11 @@ void MainWindow::ClipboardUpdate()
     m_centralWidget->adjustSize();
     this->adjustSize();
     this->show();
-    StartHide();
+    //显示时不计时隐藏
+    if(b_showing)
+        StopHide();
+    else
+        StartHide();
 
     qDebug() << m_centralWidget->width() << m_centralWidget->height();
     qDebug() << m_infoLabel->width() << m_infoLabel->height();
@@ -160,6 +182,18 @@ void MainWindow::Enable()
 void MainWindow::Disable()
 {
     disconnect(m_clipBoard, &QClipboard::dataChanged, this, &MainWindow::ClipboardUpdate);
+}
+
+void MainWindow::Show()
+{
+    b_showing = true;
+    ClipboardUpdate();
+}
+
+void MainWindow::Hide()
+{
+    b_showing = false;
+    this->hide();
 }
 
 void MainWindow::TrayIconSlot(QSystemTrayIcon::ActivationReason reason)
