@@ -61,11 +61,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_hideAct->setText(QString::fromLocal8Bit("隐藏"));
     m_exitAct->setText(QString::fromLocal8Bit("退出"));
 
+    m_infoLabel->setFont(QFont("Microsoft YaHei", m_fontSize, 75));
+
+    m_detailLabel->setFont(QFont("Microsoft YaHei", m_fontSize, 75));
     m_detailLabel->setObjectName("Detail_Label");
     m_detailLabel->setStyleSheet("QLabel#Detail_Label {border: 2px solid #1296db;}");
     m_detailLabel->setMaximumSize(QSize(m_detailLabelMaxWidth, m_detailLabelMaxHeight));
 
-    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint|Qt::SubWindow);//总在最前、无边框、任务栏不显示
+    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);//总在最前、无边框、任务栏不显示
 
     //--------------------------------------------------------------------------------------------------
 
@@ -108,10 +111,13 @@ void MainWindow::ReadConfigure()
 {
     QSettings ini_settings("./ClipboardReminder.ini", QSettings::IniFormat);
     float ini_showTime = ini_settings.value("setting/showtime").toFloat();
+    int ini_fontSize = ini_settings.value("setting/fontsize").toInt();
     int ini_width = ini_settings.value("setting/width").toInt();
     int ini_height = ini_settings.value("setting/height").toInt();
     if(ini_showTime > 0)
         m_showTime = ini_showTime;
+    if(ini_fontSize > 0)
+        m_fontSize = ini_fontSize;
     if(ini_width > 0)
         m_detailLabelMaxWidth = ini_width;
     if(ini_height > 0)
