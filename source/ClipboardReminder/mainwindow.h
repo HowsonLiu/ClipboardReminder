@@ -58,6 +58,7 @@ private:
     void ReadConfigure();
     void StartHide();
     void StopHide();
+    void UpdateSize();
 
 private slots:
     void ClipboardUpdate();

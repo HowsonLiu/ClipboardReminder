@@ -61,11 +61,11 @@ MainWindow::MainWindow(QWidget *parent) :
     m_hideAct->setText(QString::fromLocal8Bit("隐藏"));
     m_exitAct->setText(QString::fromLocal8Bit("退出"));
 
-    //m_detailLabel->setStyleSheet("QLabel {border: 2px solid #1296db;}");
+    m_detailLabel->setObjectName("Detail_Label");
+    m_detailLabel->setStyleSheet("QLabel#Detail_Label {border: 2px solid #1296db;}");
     m_detailLabel->setMaximumSize(QSize(m_detailLabelMaxWidth, m_detailLabelMaxHeight));
-    //m_detailLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);//总在最前、无边框、任务栏不显示(Qt::Tooltip)
+    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint|Qt::SubWindow);//总在最前、无边框、任务栏不显示
 
     //--------------------------------------------------------------------------------------------------
 
@@ -128,6 +128,15 @@ void MainWindow::StopHide()
     m_timer->stop();
 }
 
+void MainWindow::UpdateSize()
+{
+    m_detailLabel->adjustSize();
+    m_infoLabel->adjustSize();
+    m_centralWidget->adjustSize();
+    this->setMinimumSize(QSize(m_centralWidget->width(),m_centralWidget->height()));
+    this->setMaximumSize(QSize(m_centralWidget->width(),m_centralWidget->height()));
+}
+
 void MainWindow::ClipboardUpdate()
 {
     const QMimeData* data = m_clipBoard->mimeData();
@@ -158,20 +167,14 @@ void MainWindow::ClipboardUpdate()
         m_detailLabel->setText(QString::fromLocal8Bit("空"));
     }
 
-    m_infoLabel->adjustSize();
-    m_detailLabel->adjustSize();
-    m_centralWidget->adjustSize();
-    this->adjustSize();
+    UpdateSize();
     this->show();
+
     //显示时不计时隐藏
     if(b_showing)
         StopHide();
     else
         StartHide();
-
-    qDebug() << m_centralWidget->width() << m_centralWidget->height();
-    qDebug() << m_infoLabel->width() << m_infoLabel->height();
-    qDebug() << m_detailLabel->width() << m_detailLabel->height();
 }
 
 void MainWindow::Enable()
