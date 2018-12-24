@@ -51,9 +51,9 @@ private:
     QPoint m_mousePoint;
 
     float m_showTime = 1;
-    int m_fontSize = 12;
-    int m_detailLabelMaxWidth = 192;
-    int m_detailLabelMaxHeight = 108;
+    int m_fontSize = 15;
+    int m_detailLabelMaxWidth = 480;
+    int m_detailLabelMaxHeight = 270;
 
 private:
     void ReadConfigure();

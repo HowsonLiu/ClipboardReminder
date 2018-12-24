@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_exitAct = new QAction(this);
     m_clipBoard = QApplication::clipboard();
     m_timer = new QTimer(this);
-    m_icon = new QIcon();
+    m_icon = new QIcon(":/icon.png");
 
     QFileInfo ini_file("./ClipboardReminder.ini");
     if(ini_file.exists() == true){
@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     m_trayIcon->setContextMenu(m_menu);
+    m_trayIcon->setIcon(*m_icon);
     m_menu->addAction(m_enableAct);
     m_menu->addAction(m_disableAct);
     m_menu->addAction(m_showAct);
@@ -61,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_hideAct->setText(QString::fromLocal8Bit("隐藏"));
     m_exitAct->setText(QString::fromLocal8Bit("退出"));
 
+    m_centralWidget->setObjectName("Central_Widget");
+    m_centralWidget->setStyleSheet("QWidget#Central_Widget {border: 2px solid #1296db; background-color: white; border-radius: 15px}");
+
     m_infoLabel->setFont(QFont("Microsoft YaHei", m_fontSize, 75));
 
     m_detailLabel->setFont(QFont("Microsoft YaHei", m_fontSize, 75));
@@ -68,14 +72,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_detailLabel->setStyleSheet("QLabel#Detail_Label {border: 2px solid #1296db;}");
     m_detailLabel->setMaximumSize(QSize(m_detailLabelMaxWidth, m_detailLabelMaxHeight));
 
-    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);//总在最前、无边框、任务栏不显示
+    setAttribute(Qt::WA_TranslucentBackground);//窗口透明，否则圆角露馅
+    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);//总在最前、无边框
+    setWindowIcon(*m_icon);//程序icon
 
     //--------------------------------------------------------------------------------------------------
 
     m_trayIcon->show();
     Enable();
     ClipboardUpdate();
-    //m_timer->start(1); //构造函数不能使用this->hide
+    m_timer->start(1); //构造函数不能使用this->hide
     m_trayIcon->showMessage("ClipboardReminder", QString::fromLocal8Bit("已启用"), *m_icon, 1000);
 }
 
@@ -160,7 +166,7 @@ void MainWindow::ClipboardUpdate()
         m_infoLabel->setText(QString::fromLocal8Bit("颜色"));
         m_detailLabel->setText(QString::fromLocal8Bit("颜色"));
     }
-    else if(data->hasHtml()){
+    else if(data->hasHtml()){//text有可能是误判
         m_infoLabel->setText(QString::fromLocal8Bit("HTML"));
         m_detailLabel->setText(data->html());
     }
