@@ -21,4 +21,8 @@
 ![ini](https://raw.githubusercontent.com/HowsonLiu/ReadmeImage/master/ClipboardReminder/9.png)<br>
 
 ## 已知的漏洞
-1. 
+1. 有时复制文本会显示HTML.但这绝对不是我的错,绝对不是ヽ(`Д´)ﾉ.都是Qt的错<br>
+2. 满足以下的条件会出现界面样式问题<br>
+    a) 我是绝对不会说的( ´_ゝ｀)<br>
+    b) 你发现了我也不会改的(｀・ω・´)<br>
+# over
