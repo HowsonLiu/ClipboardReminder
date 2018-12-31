@@ -1,4 +1,4 @@
-﻿#include "singleapplication.h"
+#include "singleapplication.h"
 #include <QLocalSocket>
 
 SingleApplication::SingleApplication(int &argc, char *argv[], const QString uniquekey) : QApplication(argc, argv), uniquekey_(uniquekey)

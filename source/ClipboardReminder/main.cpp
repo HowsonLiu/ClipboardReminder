@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "singleapplication.h"
 
 int main(int argc, char *argv[])
