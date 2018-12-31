@@ -1,3 +1,14 @@
+/**
+ *		__  __                               __    _      
+ *	   / / / /___ _      ___________  ____  / /   (_)_  __
+ *	  / /_/ / __ \ | /| / / ___/ __ \/ __ \/ /   / / / / /
+ *	 / __  / /_/ / |/ |/ (__  ) /_/ / / / / /___/ / /_/ / 
+ *	/_/ /_/\____/|__/|__/____/\____/_/ /_/_____/_/\__,_/  
+ *														  
+ *github: https://github.com/HowsonLiu
+ */
+
+/*Add by CopyrightAppender*/
 #include "singleapplication.h"
 #include <QLocalSocket>
 
