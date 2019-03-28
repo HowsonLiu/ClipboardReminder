@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QSettings>
+#include <QDesktopWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -98,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_trayIcon->show();
     Enable();
     ClipboardUpdate();
+    move(QApplication::desktop()->width()*0.7, QApplication::desktop()->height()*0.05);
     m_timer->start(1); //构造函数不能使用this->hide
     m_trayIcon->showMessage("ClipboardReminder", QString::fromLocal8Bit("已启用"), *m_icon, 1000);
 }
