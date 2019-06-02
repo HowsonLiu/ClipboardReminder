@@ -27,10 +27,6 @@
 #include <QTimer>
 #include <QMouseEvent>
 
-namespace Ui {
-class MainWindow;
-}
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
