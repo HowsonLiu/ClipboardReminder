@@ -32,6 +32,15 @@
 # ClipboardReminder 1.2
 改动
 有儿子说每次都要从中间移到右上角有点烦，那我就勉为其难改一下吧
+# ClipboardReminder 1.3   
+**Optimize:**<br>
+Delete the useless .ui suffix file and update the repo directory structure<br>
+**Update:**<br>
+Before version 1.3, the tips existed as a window, so the following would occur:<br>
+![1.2bug](https://raw.githubusercontent.com/HowsonLiu/ReadmeImage/master/ClipboardReminder/Version1.2bug.PNG)<br>
+When we press Alt + TAB, the prompt window appears in all the Windows that allow toggling, which is incorrect.
+This bug was fixed in this version.
+![1.3fixed](https://raw.githubusercontent.com/HowsonLiu/ReadmeImage/master/ClipboardReminder/Version1.3fixed.PNG)
 ## 关于开机启动
 * 好消息是: 需要以管理员权限运行才能添加到开机启动(ノへ￣、)
 * 坏消息是: 你添加一次之后本程序不提供取消开机启动的功能(*￣3￣)╭  
