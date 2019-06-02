@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_disableAct, &QAction::triggered, this, &MainWindow::Disable);
     connect(m_showAct, &QAction::triggered, this, &MainWindow::Show);
     connect(m_hideAct, &QAction::triggered, this, &MainWindow::Hide);
-    connect(m_exitAct, &QAction::triggered, this, &MainWindow::close);
+    connect(m_exitAct, &QAction::triggered, this, &QApplication::quit); // tooltip 窗口后close并不能结束进程，需要使用quit
     connect(m_timer, &QTimer::timeout, this, &MainWindow::hide);
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::TrayIconSlot);
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this, &MainWindow::ClipboardUpdate);
