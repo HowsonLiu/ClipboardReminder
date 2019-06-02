@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_detailLabel->setMaximumSize(QSize(m_detailLabelMaxWidth, m_detailLabelMaxHeight));
 
     setAttribute(Qt::WA_TranslucentBackground);//窗口透明，否则圆角露馅
-    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint);//总在最前、无边框
+    setWindowFlags(Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint|Qt::ToolTip);//总在最前、无边框，而且不在任务显示器以及alt+tab窗口中显示
     setWindowIcon(*m_icon);//程序icon
 
     //--------------------------------------------------------------------------------------------------
