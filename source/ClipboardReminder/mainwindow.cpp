@@ -16,7 +16,6 @@
 
 /*Add by CopyrightAppender*/
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QVBoxLayout>
 #include <QMimeData>
 #include <QSizePolicy>
@@ -24,12 +23,11 @@
 #include <QFileInfo>
 #include <QSettings>
 #include <QDesktopWidget>
+#include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
     m_trayIcon = new QSystemTrayIcon(this);
     m_menu = new QMenu(this);
     m_centralWidget = new QWidget(this);
@@ -106,7 +104,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)

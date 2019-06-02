@@ -46,7 +46,6 @@ protected:
 
 
 private:
-    Ui::MainWindow *ui;
     QSystemTrayIcon* m_trayIcon;
     QMenu* m_menu;
     QWidget* m_centralWidget; //QMainWindow不能直接设置layout
